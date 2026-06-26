@@ -8,6 +8,40 @@ Clone it on any Mac/Linux, run one script, and Claude Code picks up the rules.
 
 ---
 
+## 中文快速上手
+
+一套可移植、可分享的 **Claude Code「家规」**:全局行为准则、编码规范,以及**强制安全 hook**
+(拦截推送 `main`、提交前扫描密钥)。在任意 Mac/Linux 上克隆、跑一个脚本即可生效。
+
+**两类规则:** Markdown 是「建议」(Claude 读取后通常遵守);hook 由 Claude Code 自己执行、**绕不过**
+——用于绝不能发生的事(泄露密钥、误推 main)。
+
+**新机器安装(5 步):**
+
+```bash
+# 1. 装依赖:git + jq(jq 给 hook 用)
+#    macOS: brew install git jq   |   Debian: sudo apt install git jq
+# 2. 装 Claude Code 并登录一次
+npm install -g @anthropic-ai/claude-code && claude
+# 3. 克隆本仓库
+git clone https://github.com/<你的用户名>/ClaudeHouseRules ~/ClaudeHouseRules
+# 4. 运行安装脚本(软链进 ~/.claude/,自动备份被替换的文件)
+bash ~/ClaudeHouseRules/install.sh
+# 5. 重启 Claude Code —— 规则与 hook 生效
+```
+
+> 顺序要点:**先装 Claude Code,再跑 `install.sh`**。hook 在启动时加载,装完务必重启。
+
+**用前需自定义:**
+1. **回复语言** —— `CLAUDE.md` 第 0 节默认用简体中文回复;想要英文就改/删该节。
+2. **机器工具** —— `CLAUDE.md` 第 10 节是空占位符,可填你装的 CLI 工具或删掉。
+3. **权限** —— 把 `settings.local.example.json` 复制为 `~/.claude/settings.local.json`,别提交真实版。
+4. **放行 main** —— 某仓库想直推 main,就在其根目录 `touch .claude-allow-main-push`。
+
+> 下方为完整英文文档 / Full English documentation below.
+
+---
+
 ## What's inside
 
 | Path | What it does | Type |
