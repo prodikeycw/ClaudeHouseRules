@@ -1,4 +1,5 @@
 {
+  "language": "chinese",
   "hooks": {
     "PreToolUse": [
       {
@@ -15,6 +16,16 @@
             "command": "$HOME/.claude/hooks/secret-scan.sh",
             "if": "Bash(git commit*)",
             "statusMessage": "扫描密钥..."
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/lang-reminder.sh"
           }
         ]
       }

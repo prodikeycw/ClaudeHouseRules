@@ -33,7 +33,10 @@ bash ~/ClaudeHouseRules/install.sh
 > 顺序要点:**先装 Claude Code,再跑 `install.sh`**。hook 在启动时加载,装完务必重启。
 
 **用前需自定义:**
-1. **回复语言** —— `CLAUDE.md` 第 0 节默认用简体中文回复;想要英文就改/删该节。
+1. **回复语言** —— 默认简体中文,由三处共同保证:`CLAUDE.md` 第 0 节、`settings.json` 的
+   `"language": "chinese"`、以及 `hooks/lang-reminder.sh`(每轮重注入,防漂移)。想换语言:
+   改这三处的文字 + `language` 值;想完全交给默认(英文):删掉 `language` 字段和
+   `UserPromptSubmit` hook 即可。
 2. **机器工具** —— `CLAUDE.md` 第 10 节是空占位符,可填你装的 CLI 工具或删掉。
 3. **权限** —— 把 `settings.local.example.json` 复制为 `~/.claude/settings.local.json`,别提交真实版。
 4. **放行 main** —— 某仓库想直推 main,就在其根目录 `touch .claude-allow-main-push`。
@@ -50,7 +53,8 @@ bash ~/ClaudeHouseRules/install.sh
 | `rules/common/*.md` | Topic rules: coding-style, testing, security, git-workflow, code-review, etc. | Advisory |
 | `hooks/protect-main.sh` | Blocks `git push` to `main`/`master` (override per-repo with a marker file) | **Enforced** |
 | `hooks/secret-scan.sh` | Blocks `git commit` when staged changes contain likely secrets | **Enforced** |
-| `settings.json` | Wires the two hooks into Claude Code as `PreToolUse` Bash hooks | Config |
+| `hooks/lang-reminder.sh` | Re-injects the response-language rule on every prompt so it doesn't drift in long sessions | **Enforced** |
+| `settings.json` | Wires the hooks into Claude Code + sets native `language` preference | Config |
 | `settings.local.example.json` | Template for machine-specific permissions (copy to `~/.claude/settings.local.json`) | Template |
 | `install.sh` | Symlinks everything into `~/.claude/` (with backups) | Installer |
 
@@ -89,8 +93,12 @@ bash ~/ClaudeHouseRules/install.sh
 
 This template ships with sensible defaults, but a few things are personal:
 
-1. **Response language** — `CLAUDE.md` section 0 defaults replies to **Simplified
-   Chinese**. Edit or delete that section for English (or another language).
+1. **Response language** — defaults to **Simplified Chinese**, enforced in three
+   places: `CLAUDE.md` section 0, `settings.json`'s `"language": "chinese"`, and
+   `hooks/lang-reminder.sh` (re-injected every prompt so it doesn't drift in long
+   sessions). To change language, edit the text in those three + the `language`
+   value. To fall back to the default (English), delete the `language` field and
+   the `UserPromptSubmit` hook from `settings.json`.
 2. **Machine tools** — `CLAUDE.md` section 10 is an empty placeholder. List any
    CLI tools you've installed that Claude should know about, or delete the section.
 3. **Permissions** — copy `settings.local.example.json` to
